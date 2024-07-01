@@ -43,7 +43,7 @@ const TaskType = new GraphQLObjectType({
         project: {
             type: ProjectType,
             resolve(parent, args) {
-                return _.find(projects, { id: parent.projectId }); 
+                return _.find(projects, { id: parent.projectId });
             }
         }
     })
@@ -59,7 +59,7 @@ const ProjectType = new GraphQLObjectType({
         tasks: {
             type: new GraphQLList(TaskType),
             resolve(parent, args) {
-                return _.filter(tasks, { projectId: parent.id }); 
+                return _.filter(tasks, { projectId: parent.id });
             }
         }
     })

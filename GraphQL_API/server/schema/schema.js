@@ -1,7 +1,7 @@
 const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLID, GraphQLList, GraphQLNonNull } = require('graphql');
 const lodash = require('lodash');
-const Project = require('./models/project');
-const Task = require('./models/task');
+const Project = require('../models/project');
+const Task = require('../models/task');
 
 const TaskType = new GraphQLObjectType({
     name: 'Task',

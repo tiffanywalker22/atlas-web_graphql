@@ -1,7 +1,9 @@
-const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLID, GraphQLList } = require('graphql');
+const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLID, GraphQLList, GraphQLNonNull } = require('graphql');
 const lodash = require('lodash');
+const Project = require('./models/project');
+const Task = require('./models/task');
 
-const projects = [
+let projects = [
     {
         id: '1',
         title: 'Advanced HTML',
@@ -16,7 +18,7 @@ const projects = [
     }
 ];
 
-const tasks = [
+let tasks = [
     {
         id: '1',
         title: 'Create your first webpage',
@@ -97,4 +99,44 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
-module.exports = new GraphQLSchema({ query: RootQuery });
+const Mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addProject: {
+            type: ProjectType,
+            args: {
+                title: { type: new GraphQLNonNull(GraphQLString) },
+                weight: { type: new GraphQLNonNull(GraphQLInt) },
+                description: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args) {
+                let project = new Project({
+                    title: args.title,
+                    weight: args.weight,
+                    description: args.description
+                });
+                return project.save();
+            }
+        },
+        addTask: {
+            type: TaskType,
+            args: {
+                title: { type: new GraphQLNonNull(GraphQLString) },
+                weight: { type: new GraphQLNonNull(GraphQLInt) },
+                description: { type: new GraphQLNonNull(GraphQLString) },
+                projectId: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve(parent, args) {
+                let task = new Task({
+                    title: args.title,
+                    weight: args.weight,
+                    description: args.description,
+                    projectId: args.projectId
+                });
+                return task.save();
+            }
+        }
+    }
+});
+
+module.exports = new GraphQLSchema({ query: RootQuery, mutation: Mutation });

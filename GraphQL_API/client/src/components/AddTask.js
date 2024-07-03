@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { graphql } from "graphql";
-import { projectsQuery } from '../queries/queries';
+import { ApolloProvider } from '@apollo/client';
+import ApolloClient from '@apollo/client';
+import { flowRight as compose } from 'lodash';
+import { addTaskMutation, projectsQuery, tasksQuery } from '../queries/queries';
 
 
 
@@ -13,22 +15,16 @@ function AddTask(props) {
   });
 
   function displayProjects() {
-    //  console.log(props);
-    var data = props.projectsQuery;
+    const data = props.projectsQuery;
     if (data.loading) {
       return ( <option> Loading projects... </option>);
       }
       else {
-        return data.projects.map(project => {
-            return ( < option key = {
-                project.id
-              }
-              value = {
-                project.id
-              } > {
-                project.title
-              } </option>);
-            })
+        return data.projects.map(project => (
+          <option key={project.id} value={project.id}>
+          {project.title}
+          </option>
+        ));
         }
       }
 
@@ -40,6 +36,19 @@ function AddTask(props) {
         if (e.target.name === "weight") newInputs[e.target.name] = parseInt(e.target.value)
         else newInputs[e.target.name] = e.target.value
         setInputs(newInputs)
+  }
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    props.addTaskMutation({
+      variables: {
+        title: inputs.title,
+        weight: inputs.weight,
+        description: inputs.description,
+        projectId: inputs.projectId
+      },
+      refetchQueries: [{ query: tasksQuery }]
+    });
   }
 
   return (
@@ -68,4 +77,7 @@ function AddTask(props) {
   );
 }
 
-export default AddTask;
+export default compose(
+  graphql(projectsQuery, { name: "projectsQuery" }),
+  graphql(addTaskMutation, { name: "addTaskMutation" })
+)(AddTask);

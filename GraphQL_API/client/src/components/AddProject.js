@@ -13,6 +13,14 @@ function AddProject(props) {
 
   });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputsProject({
+      ...inputsProject,
+      [name]: value
+    });
+  };
+
   const submitForm1 = (e) => {
     e.preventDefault();
     props.addProjectMutation({

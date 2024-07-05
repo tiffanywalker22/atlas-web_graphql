@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { ApolloProvider } from '@apollo/client';
-import ApolloClient from '@apollo/client';
+import { useState } from 'react';
+import { graphql } from "graphql";
 import { flowRight as compose } from 'lodash';
 import { addTaskMutation, projectsQuery, tasksQuery } from '../queries/queries';
 

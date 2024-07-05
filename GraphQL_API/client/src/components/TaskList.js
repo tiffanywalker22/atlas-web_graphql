@@ -8,6 +8,13 @@ function TaskList(props) {
     selected: null
   });
 
+  const setSelected = (id) => {
+    setState({
+      selected: id
+    });
+  };
+
+
   function displayTasks() {
     const data = props.data;
     if (data.loading) {
@@ -27,7 +34,7 @@ function TaskList(props) {
         <ul id="task-list">
             {displayTasks()}
         </ul>
-        <TaskDetails taskId={selected} />
+        <TaskDetails taskId={state.selected} />
     </div>
   );
 }
